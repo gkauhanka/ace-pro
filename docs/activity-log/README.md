@@ -68,7 +68,7 @@ The `What changed` section should show the reasoning explicitly. A useful patter
 
 Discovery entries belong in [`discovery/`](./discovery/).
 
-<!-- Add dated discovery entries here. -->
+- [Initial Discovery](./discovery/2026-08-12-initial-discovery.md) — August 12, 2026
 
 ## Technical experiments
 
