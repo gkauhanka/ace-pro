@@ -248,3 +248,9 @@ The project remains in discovery, with no final feature set. Two questions must 
 
 1. Is the information useful to players and coaches?
 2. Can it be extracted reliably enough from normal tennis video?
+
+## Follow-up
+
+Competitor research completed on August 13 showed that the broad statistics-and-clips concept overlaps substantially with existing products, especially SwingVision. The next discovery direction is to test SwingVision and Wingfield directly, record takeaways, and learn whether my teammates and coach need a better way to turn evidence-backed match patterns into practice priorities and clearer next actions.
+
+See [Competitor Research and Product Positioning](./2026-08-13-competitor-research-and-positioning.md) for the findings and new hypotheses.

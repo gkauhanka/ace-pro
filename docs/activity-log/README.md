@@ -69,6 +69,7 @@ The `What changed` section should show the reasoning explicitly. A useful patter
 Discovery entries belong in [`discovery/`](./discovery/).
 
 - [Initial Discovery](./discovery/2026-08-12-initial-discovery.md) — August 12, 2026
+- [Competitor Research and Product Positioning](./discovery/2026-08-13-competitor-research-and-positioning.md) — August 13, 2026
 
 ## Technical experiments
 
