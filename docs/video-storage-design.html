@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ace Pro — Video Storage Design</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#f4f7f4; --surface:#fff; --text:#17231b; --muted:#637168; --line:#d6e0d8; --green:#176b39; --green-soft:#e1f2e6; --amber:#925300; --amber-soft:#fff2d6; --code:#eef3ef; }
+    @media (prefers-color-scheme:dark) { :root { --bg:#0e1511; --surface:#172019; --text:#edf6ef; --muted:#acb9b0; --line:#334139; --green:#77d391; --green-soft:#193723; --amber:#ffc571; --amber-soft:#3a2a13; --code:#202b23; } }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { width:min(1080px,calc(100% - 32px)); margin:0 auto; padding:48px 0 72px; }
+    header { padding:32px; color:#f4fff7; background:#174d2a; border-radius:22px; }
+    .eyebrow { margin:0 0 7px; color:#a8e6b9; font-size:12px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
+    h1 { margin:0 0 8px; font-size:clamp(30px,5vw,52px); line-height:1.08; letter-spacing:-.035em; }
+    header p { max-width:760px; margin:0; color:#dceee1; }
+    .status { display:inline-block; margin-top:18px; padding:7px 11px; background:#276a3d; border:1px solid #59956a; border-radius:999px; font-size:13px; font-weight:700; }
+    nav { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 38px; }
+    nav a { color:var(--green); text-decoration:none; padding:7px 10px; border:1px solid var(--line); border-radius:9px; background:var(--surface); }
+    section { margin-top:42px; scroll-margin-top:20px; }
+    h2 { margin:0 0 14px; font-size:25px; letter-spacing:-.02em; }
+    h3 { margin:0 0 7px; font-size:17px; }
+    p { margin:7px 0; }
+    .lead { max-width:820px; color:var(--muted); }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .card { padding:18px; background:var(--surface); border:1px solid var(--line); border-radius:14px; }
+    .card p { margin:0; color:var(--muted); }
+    .architecture { display:grid; grid-template-columns:1fr 52px 1fr 52px 1fr; align-items:stretch; margin-top:20px; }
+    .node { min-height:160px; padding:18px; background:var(--surface); border:1px solid var(--line); border-radius:14px; }
+    .node strong { display:block; margin-bottom:8px; color:var(--green); }
+    .node ul { margin:0; padding-left:19px; }
+    .arrow { display:grid; place-items:center; color:var(--green); font-size:26px; }
+    .sequence { counter-reset:steps; display:grid; gap:10px; padding:0; list-style:none; }
+    .sequence li { counter-increment:steps; display:grid; grid-template-columns:36px 1fr; gap:12px; padding:14px 16px; background:var(--surface); border:1px solid var(--line); border-radius:12px; }
+    .sequence li::before { content:counter(steps); display:grid; place-items:center; width:30px; height:30px; border-radius:50%; color:var(--green); background:var(--green-soft); font-weight:800; }
+    .sequence b { display:block; }
+    .sequence span { color:var(--muted); }
+    table { width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--line); }
+    th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    th { color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:.05em; }
+    tr:last-child td { border-bottom:0; }
+    code { padding:2px 5px; background:var(--code); border-radius:5px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.9em; }
+    .note { padding:14px 16px; background:var(--amber-soft); border-left:4px solid var(--amber); border-radius:8px; }
+    .note strong { color:var(--amber); }
+    .state { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .state span { padding:8px 11px; background:var(--green-soft); color:var(--green); border-radius:999px; font-size:13px; font-weight:700; }
+    .state i { color:var(--muted); font-style:normal; }
+    footer { margin-top:52px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font-size:14px; }
+    @media (max-width:800px) { .grid { grid-template-columns:1fr; } .architecture { grid-template-columns:1fr; gap:10px; } .arrow { transform:rotate(90deg); } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Ace Pro · architecture decision</p>
+      <h1>Long-form video storage</h1>
+      <p>Confirmed design for uploading tennis-match videos from an iPhone Photos library, displaying transfer progress, resuming interrupted uploads, storing originals, and returning both a storage path and an unlisted playback URL.</p>
+      <span class="status">Design confirmed · implementation not started</span>
+    </header>
+
+    <nav aria-label="Document sections">
+      <a href="#decisions">Decisions</a><a href="#architecture">Architecture</a><a href="#upload">Upload flow</a><a href="#resume">Resume</a><a href="#contracts">Service contract</a><a href="#delete">Deletion</a><a href="#boundaries">Boundaries</a>
+    </nav>
+
+    <section id="decisions">
+      <h2>Confirmed decisions</h2>
+      <div class="grid">
+        <article class="card"><h3>Input</h3><p>iOS Photos library; MOV or MP4 containing H.264 or HEVC video.</p></article>
+        <article class="card"><h3>Limits</h3><p>Maximum duration: 3 hours. Maximum object size: 20 GB.</p></article>
+        <article class="card"><h3>Upload behavior</h3><p>Multipart transfer with byte-based progress and resume support for 24 hours.</p></article>
+        <article class="card"><h3>Storage</h3><p>Amazon S3 in a US region. The exact region is selected with backend hosting.</p></article>
+        <article class="card"><h3>Playback</h3><p>Unlisted public CloudFront URL. Videos do not appear in public search or listings.</p></article>
+        <article class="card"><h3>Retention</h3><p>Originals remain indefinitely until their owner explicitly deletes them.</p></article>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <h2>Architecture</h2>
+      <p class="lead">Large video bytes never pass through the Python API. The API controls and records the upload; the iPhone transfers each part directly to S3.</p>
+      <div class="architecture" role="img" aria-label="iOS app communicates with the Python API, uploads directly to Amazon S3, and plays through Amazon CloudFront">
+        <article class="node"><strong>iOS application</strong><ul><li>Selects a video from Photos</li><li>Validates basic metadata</li><li>Persists the upload session</li><li>Uploads parts and calculates progress</li><li>Plays the completed video</li></ul></article>
+        <div class="arrow" aria-hidden="true">→</div>
+        <article class="node"><strong>Python control API</strong><ul><li>Authorizes operations</li><li>Creates multipart sessions</li><li>Issues time-limited part URLs</li><li>Completes or aborts uploads</li><li>Returns storage and playback references</li></ul></article>
+        <div class="arrow" aria-hidden="true">→</div>
+        <article class="node"><strong>AWS data services</strong><ul><li>S3 stores multipart uploads and originals</li><li>CloudFront exposes unlisted playback</li><li>PostgreSQL is recommended for metadata</li><li>The S3 bucket is not publicly writable</li></ul></article>
+      </div>
+    </section>
+
+    <section id="upload">
+      <h2>Successful upload flow</h2>
+      <ol class="sequence">
+        <li><div><b>Select and validate</b><span>The app reads the selected Photos asset's name, byte size, duration, container, and codec. It rejects files above 20 GB, longer than 3 hours, or outside the accepted formats.</span></div></li>
+        <li><div><b>Create upload session</b><span>The app sends file metadata to the Python API. The API allocates an opaque video identifier, a non-guessable object key, and an S3 multipart upload.</span></div></li>
+        <li><div><b>Upload parts directly</b><span>The API supplies time-limited upload URLs. The app sends chunks to S3 and records each completed part identifier locally.</span></div></li>
+        <li><div><b>Display transfer progress</b><span>Progress equals uploaded bytes divided by total file bytes. It represents transfer only—not validation or later video analysis.</span></div></li>
+        <li><div><b>Complete atomically</b><span>The app submits the completed-part list to the API. The API asks S3 to assemble the object and records the upload as complete.</span></div></li>
+        <li><div><b>Return references</b><span>The response contains the durable storage path and a separate CloudFront playback URL.</span></div></li>
+      </ol>
+    </section>
+
+    <section id="resume">
+      <h2>Resume and failure handling</h2>
+      <div class="state" aria-label="Upload state sequence"><span>pending</span><i>→</i><span>uploading</span><i>→</i><span>paused</span><i>→</i><span>uploading</span><i>→</i><span>completing</span><i>→</i><span>ready</span></div>
+      <p>The app persists the video identifier, S3 upload identifier, object key, file fingerprint, part size, and completed-part records. After network loss, app termination, or device restart, it reconciles completed parts with the API and uploads only missing parts.</p>
+      <p>Incomplete sessions expire 24 hours after creation. S3 lifecycle cleanup aborts expired multipart uploads so abandoned parts do not accumulate storage charges. If the session expired, the app must create a new upload and begin again.</p>
+      <div class="note"><strong>Photos availability:</strong> resuming requires the original Photos asset to remain available and unchanged on the device. If it was deleted or changed, the session cannot safely continue.</div>
+    </section>
+
+    <section id="contracts">
+      <h2>Conceptual service contract</h2>
+      <p class="lead">Names and wire formats are intentionally deferred. These are the required operations, not final endpoint definitions.</p>
+      <table>
+        <thead><tr><th>Operation</th><th>Purpose</th><th>Required result</th></tr></thead>
+        <tbody>
+          <tr><td>Create upload</td><td>Validate declared metadata and create a multipart session.</td><td>Video ID, upload ID, object key, part strategy, expiry.</td></tr>
+          <tr><td>Authorize parts</td><td>Issue time-limited permission to upload one or more numbered parts.</td><td>Presigned part URLs.</td></tr>
+          <tr><td>Inspect upload</td><td>Reconcile server/S3 state during resume.</td><td>Completed part numbers and identifiers.</td></tr>
+          <tr><td>Complete upload</td><td>Assemble all parts and mark the video ready.</td><td><code>storage_path</code> and <code>playback_url</code>.</td></tr>
+          <tr><td>Abort upload</td><td>Cancel an upload explicitly or after expiry.</td><td>No retained incomplete parts.</td></tr>
+          <tr><td>Delete video</td><td>Remove the original and revoke playback.</td><td>Object deleted and CloudFront invalidation started.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="delete">
+      <h2>Deletion behavior</h2>
+      <ol class="sequence">
+        <li><div><b>Authorize ownership</b><span>The service confirms that the requesting user owns the video. Authentication design itself remains out of scope.</span></div></li>
+        <li><div><b>Disable application access</b><span>The metadata record becomes unavailable to normal reads so the app stops presenting it.</span></div></li>
+        <li><div><b>Delete the S3 object</b><span>The stored original is permanently removed.</span></div></li>
+        <li><div><b>Invalidate CloudFront</b><span>The unlisted playback path is purged from edge caches. Propagation takes several seconds and cannot recall a download already in progress.</span></div></li>
+      </ol>
+    </section>
+
+    <section id="boundaries">
+      <h2>Security and scope boundaries</h2>
+      <div class="grid">
+        <article class="card"><h3>Storage permissions</h3><p>The S3 bucket blocks arbitrary public writes. The app receives narrowly scoped, expiring upload URLs only for the active object and part.</p></article>
+        <article class="card"><h3>Unlisted is not private</h3><p>Anyone who obtains the playback URL can watch the video. Random object identifiers reduce guessing but do not provide access control.</p></article>
+        <article class="card"><h3>Metadata database</h3><p>PostgreSQL on Amazon RDS is recommended. Schema, sizing, availability, and deployment are deferred.</p></article>
+      </div>
+      <h3 style="margin-top:24px">Out of scope for this design</h3>
+      <ul><li>User authentication design</li><li>Video transcoding, thumbnails, analysis, or downstream processing</li><li>Database schema and deployment</li><li>Exact Python framework and endpoint naming</li><li>Infrastructure provisioning and application implementation</li></ul>
+    </section>
+
+    <footer>Confirmed design for Ace Pro · August 2026</footer>
+  </main>
+</body>
+</html>
