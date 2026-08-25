@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ace Pro Upload Test Client</title>
+  <style>
+    :root { color-scheme:light dark; --bg:#f2f6f2; --panel:#fff; --text:#19231c; --muted:#667269; --line:#d5dfd7; --accent:#176b39; --accent-text:#fff; --danger:#a52a2a; }
+    @media (prefers-color-scheme:dark) { :root { --bg:#101611; --panel:#182019; --text:#eef6f0; --muted:#abb7ae; --line:#344138; --accent:#65c780; --accent-text:#0b2212; --danger:#ff8d8d; } }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { width:min(780px,calc(100% - 28px)); margin:32px auto 60px; }
+    header { margin-bottom:22px; }
+    h1 { margin:0 0 5px; font-size:30px; }
+    header p,.muted { color:var(--muted); }
+    section { padding:20px; background:var(--panel); border:1px solid var(--line); border-radius:14px; margin-top:14px; }
+    label { display:block; font-weight:650; }
+    input,button { width:100%; margin-top:6px; padding:10px 11px; color:var(--text); background:var(--panel); border:1px solid var(--line); border-radius:8px; font:inherit; }
+    button { width:auto; cursor:pointer; font-weight:700; }
+    button.primary { color:var(--accent-text); background:var(--accent); border-color:var(--accent); }
+    button.danger { color:var(--danger); }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+    progress { width:100%; height:22px; accent-color:var(--accent); }
+    .progress-row { display:flex; justify-content:space-between; gap:12px; margin:8px 0; }
+    dl { display:grid; grid-template-columns:150px 1fr; gap:8px 12px; margin:0; }
+    dt { color:var(--muted); }
+    dd { margin:0; overflow-wrap:anywhere; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    #message[data-kind="error"] { color:var(--danger); }
+    video { width:100%; max-height:440px; margin-top:14px; background:#000; border-radius:10px; }
+    @media (max-width:620px) { dl { grid-template-columns:1fr; gap:2px; } dd { margin-bottom:8px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header><h1>Ace Pro upload test</h1><p>Local backend and multipart-storage test client. Select a MOV or MP4 file up to 20 GB.</p></header>
+    <section>
+      <label>Video file<input id="file" type="file" accept="video/quicktime,video/mp4,.mov,.mp4"></label>
+      <p class="muted">File size, format, duration, and upload identity are detected automatically.</p>
+      <div class="actions">
+        <button id="start" class="primary" type="button">Start upload</button>
+        <button id="resume" type="button">Resume saved upload</button>
+        <button id="pause" type="button" disabled>Pause</button>
+        <button id="abort" class="danger" type="button" disabled>Abort</button>
+      </div>
+    </section>
+    <section aria-live="polite">
+      <div class="progress-row"><strong id="state">Idle</strong><span id="progressText">0%</span></div>
+      <progress id="progress" value="0" max="100">0%</progress>
+      <p id="message" class="muted">Choose a video to begin.</p>
+    </section>
+    <section>
+      <h2>Current result</h2>
+      <dl><dt>Video ID</dt><dd><code id="videoId">—</code></dd><dt>Storage path</dt><dd><code id="storagePath">—</code></dd><dt>Playback URL</dt><dd><code id="playbackUrl">—</code></dd></dl>
+      <div class="actions"><button id="delete" class="danger" type="button" disabled>Delete video</button></div>
+      <video id="player" controls hidden></video>
+    </section>
+  </main>
+  <script>
+    (() => {
+      "use strict";
+      const api = "/api/v1";
+      const maxBytes = 20 * 1024 * 1024 * 1024;
+      const sessionKey = "ace-pro-upload-session";
+      const el = Object.fromEntries(["file","start","resume","pause","abort","delete","state","progress","progressText","message","videoId","storagePath","playbackUrl","player"].map(id => [id, document.getElementById(id)]));
+      let selectedFile = null;
+      let selectedDuration = null;
+      let saved = loadSession();
+      let paused = false;
+      let activeRequest = null;
+
+      function loadSession() { try { return JSON.parse(localStorage.getItem(sessionKey)); } catch (_) { return null; } }
+      function saveSession(value) { saved = value; localStorage.setItem(sessionKey, JSON.stringify(value)); }
+      function clearSession() { saved = null; localStorage.removeItem(sessionKey); }
+      function setMessage(text, kind = "info") { el.message.textContent = text; el.message.dataset.kind = kind; }
+      function setState(value) { el.state.textContent = value; }
+      function setProgress(bytes, total) { const percent = total ? Math.min(100, bytes / total * 100) : 0; el.progress.value = percent; el.progressText.textContent = `${percent.toFixed(1)}%`; }
+      async function jsonRequest(url, options = {}) { const response = await fetch(url, { ...options, headers: { "Content-Type":"application/json", ...(options.headers || {}) } }); const body = response.status === 204 ? null : await response.json(); if (!response.ok) throw new Error(body?.error?.message || `Request failed: ${response.status}`); return body; }
+      function fingerprint(file) { return `${file.name}:${file.size}:${file.lastModified}`; }
+      function containerFor(file) { const name = file.name.toLowerCase(); return name.endsWith(".mov") ? "mov" : name.endsWith(".mp4") ? "mp4" : ""; }
+      function validate(file) { if (!file) throw new Error("Choose a file."); if (!containerFor(file)) throw new Error("Only MOV and MP4 files are accepted."); if (file.size > maxBytes) throw new Error("The file exceeds the 20 GB limit."); if (!selectedDuration) throw new Error("The video duration could not be detected."); if (selectedDuration > 10800) throw new Error("The video exceeds the 3-hour limit."); return selectedDuration; }
+      function readDuration(file) { return new Promise((resolve, reject) => { const probe = document.createElement("video"); const objectUrl = URL.createObjectURL(file); const cleanup = () => { URL.revokeObjectURL(objectUrl); probe.removeAttribute("src"); }; probe.preload = "metadata"; probe.onloadedmetadata = () => { const duration = probe.duration; cleanup(); Number.isFinite(duration) && duration > 0 ? resolve(Math.ceil(duration)) : reject(new Error("The video duration could not be detected.")); }; probe.onerror = () => { cleanup(); reject(new Error("The browser could not read this video's metadata.")); }; probe.src = objectUrl; }); }
+      function partBytes(file, number, size) { const start = (number - 1) * size; return file.slice(start, Math.min(start + size, file.size)); }
+
+      async function uploadPart(url, blob, uploadedBefore, total) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest(); activeRequest = xhr; xhr.open("PUT", url);
+          xhr.upload.onprogress = event => { if (event.lengthComputable) setProgress(uploadedBefore + event.loaded, total); };
+          xhr.onload = () => { activeRequest = null; if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.getResponseHeader("ETag")); else reject(new Error(`Part upload failed: ${xhr.status}`)); };
+          xhr.onerror = () => { activeRequest = null; reject(new Error("Part upload failed due to a network error.")); };
+          xhr.onabort = () => { activeRequest = null; reject(new DOMException("Paused", "AbortError")); };
+          xhr.send(blob);
+        });
+      }
+
+      async function runUpload(file, session) {
+        paused = false; el.pause.disabled = false; el.abort.disabled = false; el.start.disabled = true; el.resume.disabled = true; setState("Uploading");
+        try {
+          const status = await jsonRequest(`${api}/uploads/${session.upload_id}`);
+          const completed = new Map(status.parts.map(part => [part.part_number, part]));
+          let confirmed = status.parts.reduce((sum, part) => sum + part.size_bytes, 0); setProgress(confirmed, file.size);
+          const totalParts = Math.ceil(file.size / session.part_size_bytes);
+          for (let number = 1; number <= totalParts; number += 1) {
+            if (paused) return;
+            if (completed.has(number)) continue;
+            const auth = await jsonRequest(`${api}/uploads/${session.upload_id}/parts`, { method:"POST", body:JSON.stringify({ part_numbers:[number] }) });
+            const blob = partBytes(file, number, session.part_size_bytes);
+            const etag = await uploadPart(auth.parts[0].url, blob, confirmed, file.size);
+            session.parts = [...(session.parts || []).filter(part => part.part_number !== number), { part_number:number, etag, size_bytes:blob.size }];
+            confirmed += blob.size; saveSession(session); setProgress(confirmed, file.size);
+          }
+          setState("Completing upload");
+          const result = await jsonRequest(`${api}/uploads/${session.upload_id}/complete`, { method:"POST", body:JSON.stringify({ parts:session.parts.sort((a,b) => a.part_number - b.part_number) }) });
+          clearSession(); showResult(result); setState("Ready"); setProgress(file.size, file.size); setMessage("Upload completed successfully.");
+        } catch (error) {
+          if (error.name === "AbortError") { setState("Paused"); setMessage("Upload paused. Resume it with the same file."); }
+          else { setState("Failed"); setMessage(error.message, "error"); }
+        } finally { el.pause.disabled = true; el.start.disabled = false; el.resume.disabled = false; }
+      }
+
+      function showResult(result) { el.videoId.textContent = result.video_id; el.storagePath.textContent = result.storage_path; el.playbackUrl.textContent = result.playback_url; el.delete.disabled = false; el.player.src = result.playback_url; el.player.hidden = false; }
+      el.file.addEventListener("change", async () => { selectedFile = el.file.files[0] || null; selectedDuration = null; if (!selectedFile) { setMessage("Choose a video to begin."); return; } try { setMessage("Reading video metadata…"); selectedDuration = await readDuration(selectedFile); setMessage(`Ready to upload ${selectedFile.name} (${selectedDuration} seconds).`); } catch (error) { setMessage(error.message, "error"); } });
+      el.start.addEventListener("click", async () => { try { const duration = validate(selectedFile); const created = await jsonRequest(`${api}/uploads`, { method:"POST", headers:{ "Idempotency-Key":crypto.randomUUID() }, body:JSON.stringify({ original_filename:selectedFile.name, content_type:selectedFile.type || "application/octet-stream", container:containerFor(selectedFile), codec:"unknown", size_bytes:selectedFile.size, duration_seconds:duration, source_fingerprint:fingerprint(selectedFile) }) }); const session = { ...created, fingerprint:fingerprint(selectedFile), file_size:selectedFile.size, parts:[] }; saveSession(session); el.videoId.textContent = created.video_id; await runUpload(selectedFile, session); } catch (error) { setMessage(error.message, "error"); } });
+      el.resume.addEventListener("click", async () => { try { validate(selectedFile); if (!saved) throw new Error("No saved upload exists in this browser."); if (saved.fingerprint !== fingerprint(selectedFile)) throw new Error("Select the same unchanged file used to start the upload."); await runUpload(selectedFile, saved); } catch (error) { setMessage(error.message, "error"); } });
+      el.pause.addEventListener("click", () => { paused = true; if (activeRequest) activeRequest.abort(); });
+      el.abort.addEventListener("click", async () => { if (!saved) return; try { paused = true; if (activeRequest) activeRequest.abort(); await jsonRequest(`${api}/uploads/${saved.upload_id}`, { method:"DELETE" }); clearSession(); setState("Aborted"); setProgress(0, 1); setMessage("Upload aborted and saved browser state cleared."); } catch (error) { setMessage(error.message, "error"); } });
+      el.delete.addEventListener("click", async () => { const videoId = el.videoId.textContent; if (!videoId || videoId === "—") return; try { await jsonRequest(`${api}/videos/${videoId}`, { method:"DELETE" }); el.player.removeAttribute("src"); el.player.load(); el.player.hidden = true; el.delete.disabled = true; setState("Deleted"); setMessage("Video deletion requested successfully."); } catch (error) { setMessage(error.message, "error"); } });
+      if (saved) setMessage("A saved upload exists. Select the same file and choose Resume saved upload.");
+    })();
+  </script>
+</body>
+</html>

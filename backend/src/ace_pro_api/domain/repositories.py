@@ -1,0 +1,33 @@
+from collections.abc import Sequence
+from datetime import datetime
+from typing import Protocol
+
+from ace_pro_api.persistence.models import UploadPart, UploadSession, Video
+
+
+class VideoRepository(Protocol):
+    async def add(self, video: Video) -> Video: ...
+
+    async def get(self, video_id: str) -> Video | None: ...
+
+    async def save(self, video: Video) -> Video: ...
+
+
+class UploadRepository(Protocol):
+    async def add_session(self, upload: UploadSession) -> UploadSession: ...
+
+    async def get_session(self, upload_id: str) -> UploadSession | None: ...
+
+    async def get_by_idempotency_key(self, key: str) -> UploadSession | None: ...
+
+    async def save_session(self, upload: UploadSession) -> UploadSession: ...
+
+    async def replace_parts(
+        self, upload_id: str, parts: Sequence[UploadPart]
+    ) -> Sequence[UploadPart]: ...
+
+    async def list_parts(self, upload_id: str) -> Sequence[UploadPart]: ...
+
+    async def list_expired_active(
+        self, *, now: datetime, limit: int
+    ) -> Sequence[UploadSession]: ...

@@ -1,0 +1,6 @@
+aws_region            = "us-west-2"
+environment           = "development"
+bucket_name           = "replace-with-a-globally-unique-ace-pro-bucket-name"
+allowed_upload_origins = ["http://127.0.0.1:8000", "http://localhost:8000"]
+cloudfront_price_class = "PriceClass_100"
+
