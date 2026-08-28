@@ -8,6 +8,10 @@ The initial direction is to focus on full-match analysis for players, with coach
 
 The first backend slice implements resumable direct-to-object-storage video transfer with FastAPI, PostgreSQL, local MinIO testing, and production-shaped AWS Terraform. See the [backend runbook](./backend/README.md) and [storage design](./docs/video-storage-design.md).
 
+## iOS UX prototype
+
+The first SwiftUI app prototype lives in [`ios`](./ios). It uses mocked match data and covers prioritized insights, supporting clips, detection correction, match history, team context, and the upload experience without requiring the backend.
+
 ## Next action items
 
 - Interview a tennis coach about how they evaluate players and review match footage.
