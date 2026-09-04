@@ -112,3 +112,5 @@ The production-shaped AWS resources are documented in [`../infra/terraform/READM
 
 - [`../docs/video-storage-design.md`](../docs/video-storage-design.md) is the implementation handoff and decision record.
 - [`../docs/video-storage-design.html`](../docs/video-storage-design.html) is the visual design explanation.
+- [`../docs/adr/0001-hybrid-evidence-backed-video-analysis.md`](../docs/adr/0001-hybrid-evidence-backed-video-analysis.md) records the proposed downstream analysis architecture.
+- [`../docs/video-analysis/README.md`](../docs/video-analysis/README.md) indexes the component-level video-analysis specifications.

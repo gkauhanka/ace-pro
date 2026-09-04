@@ -12,6 +12,10 @@ The first backend slice implements resumable direct-to-object-storage video tran
 
 The first SwiftUI app prototype lives in [`ios`](./ios). It uses mocked match data and covers prioritized insights, supporting clips, detection correction, match history, team context, and the upload experience without requiring the backend.
 
+## Video analysis architecture
+
+The proposed hybrid, evidence-backed analysis architecture is recorded in [ADR-0001](./docs/adr/0001-hybrid-evidence-backed-video-analysis.md). Its implementation contracts are split into the [video-analysis technical specifications](./docs/video-analysis/README.md), covering orchestration, media processing, quality checks, vision inference, tennis events, insights, clips, corrections, APIs, operations, and evaluation.
+
 ## Next action items
 
 - Interview a tennis coach about how they evaluate players and review match footage.
