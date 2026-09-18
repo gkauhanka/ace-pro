@@ -4,13 +4,31 @@ Ace Pro is an early-stage tennis match analysis project. The goal is to turn ord
 
 The initial direction is to focus on full-match analysis for players, with coaches as a secondary user group. Before defining the MVP, the project will validate which insights are genuinely useful and which tennis events current AI video models can detect reliably.
 
+## Experience walkthrough
+
+A walkthrough of the mobile browser experience: create a device account, import a local video, explore sample insights, replay timestamps, save drills and notes, and review related moments across sessions.
+
+[![Ace Pro mobile experience walkthrough](./docs/media/ace-pro-preview.gif)](./docs/media/ace-pro-walkthrough.mp4)
+
+**[Watch the full MP4 walkthrough](./docs/media/ace-pro-walkthrough.mp4)** · [Still preview](./docs/media/ace-pro-poster.png) · [Re-recording instructions](./tools/recording/README.md)
+
+Recorded with a demo account and generated court footage. This is the browser preview, not an iOS Simulator capture. Insights and timestamps are simulated; video stays on-device.
+
 ## Video storage implementation
 
 The first backend slice implements resumable direct-to-object-storage video transfer with FastAPI, PostgreSQL, local MinIO testing, and production-shaped AWS Terraform. See the [backend runbook](./backend/README.md) and [storage design](./docs/video-storage-design.md).
 
-## iOS UX prototype
+## On-device iOS coaching experience
 
-The first SwiftUI app prototype lives in [`ios`](./ios). It uses mocked match data and covers prioritized insights, supporting clips, detection correction, match history, team context, and the upload experience without requiring the backend.
+The native SwiftUI app in [`ios`](./ios) now includes device accounts, guest access, Photos/Files import, a persistent local video library, simulated processing, metadata-only insights, timestamp playback across videos, practice plans and notes. All random reports are explicitly labeled as examples, not actual video analysis.
+
+Run the working local experience and its single API:
+
+```sh
+node insights-api/server.mjs
+```
+
+Open http://localhost:8787. The browser preview is available without Xcode and can create a local court demo video. See the [API/preview runbook](./insights-api/README.md), [native iOS instructions](./ios/README.md), and [release boundary](./docs/app-store-experience.md). This experience does **not** use the older upload backend or ML pipeline below.
 
 ## Video analysis architecture
 

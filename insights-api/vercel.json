@@ -1,0 +1,6 @@
+{
+  "framework": null,
+  "buildCommand": "",
+  "outputDirectory": "preview",
+  "functions": { "api/insights.mjs": { "maxDuration": 10 } }
+}

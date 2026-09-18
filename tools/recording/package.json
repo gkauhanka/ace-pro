@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "playwright": "1.63.0"
+  },
+  "name": "ace-pro-walkthrough",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "record": "node record.mjs"
+  }
+}
