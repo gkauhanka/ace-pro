@@ -29,6 +29,8 @@ alembic upgrade head
 uvicorn ace_pro_api.main:app --reload
 ```
 
+FFmpeg and ffprobe must also be available on `PATH` for media inspection and evidence-clip generation.
+
 Some Docker Desktop installations provide the standalone `docker-compose` command instead of `docker compose`; either form works with `compose.yaml`.
 
 Open these local endpoints:
@@ -65,6 +67,48 @@ All API endpoints are under `/api/v1`:
 Creation accepts an `Idempotency-Key` header. Part authorization is batched up to 100 parts. The configured part size is 64 MiB, presigned URLs last 15 minutes, and upload sessions expire after 24 hours.
 
 Development requests use `X-Dev-User` when supplied and otherwise use `local-test-user`. Production mode deliberately fails closed until the real application authentication adapter is connected.
+
+## Manual return-depth analysis
+
+Open `http://127.0.0.1:8000/analysis-review` for the browser review workflow, or follow
+“Review this match” after an upload. Create an analysis, import your reviewed annotation JSON,
+inspect the short/deep return comparison and evidence clips, then correct stroke, depth, or winner.
+Each saved correction refreshes the calculated report. A stale edit displays a conflict and asks
+you to refresh before retrying. The report URL can reopen an existing analysis.
+
+The first analysis vertical slice uses human annotations rather than computer vision. It inspects a completed video with ffprobe, imports point and return labels, calculates short-versus-deep backhand return results, generates evidence clips with FFmpeg, and recalculates the insight after corrections.
+
+After completing a video upload, create an idempotent analysis job:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/videos/VIDEO_ID/analyses
+```
+
+The response contains `analysis_id` and initially reports `awaiting_annotations`. Update the timestamps in [`examples/return-depth-annotations.json`](./examples/return-depth-annotations.json) to match the uploaded video, then import them:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/analyses/ANALYSIS_ID/annotations \
+  -H 'Content-Type: application/json' \
+  --data @examples/return-depth-annotations.json
+```
+
+The response contains the deterministic insight, integer counts, rates, event revisions, and evidence-clip URLs. Retrieve the latest report with:
+
+```bash
+curl http://127.0.0.1:8000/api/v1/analyses/ANALYSIS_ID
+```
+
+Correct a reviewed event without overwriting its original prediction:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/events/EVENT_ID/corrections \
+  -H 'Content-Type: application/json' \
+  -d '{"base_revision":0,"landing_zone":"deep","reason":"reviewed_clip"}'
+```
+
+Corrections use optimistic concurrency. Reusing an old `base_revision` returns a conflict rather than replacing a newer review.
+
+This slice intentionally does not detect points, strokes, bounces, or winners automatically. Those labels remain manual until the vision components meet the documented evaluation gates.
 
 ## Verification
 

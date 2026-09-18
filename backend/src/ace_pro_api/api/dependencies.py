@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from ace_pro_api.auth import CurrentUser, DevelopmentAuthProvider, development_identity_header
 from ace_pro_api.config import get_settings
+from ace_pro_api.media import FFmpegMediaProcessor, MediaProcessor
 from ace_pro_api.persistence.database import create_database_engine, create_session_factory
 from ace_pro_api.storage.cdn import CdnInvalidator, CloudFrontInvalidator, NoOpCdnInvalidator
 from ace_pro_api.storage.s3 import S3ObjectStorage
@@ -34,6 +35,12 @@ async def get_database_session() -> AsyncIterator[AsyncSession]:
 @lru_cache
 def get_object_storage() -> S3ObjectStorage:
     return S3ObjectStorage(get_settings())
+
+
+def get_media_processor(
+    storage: S3ObjectStorage = Depends(get_object_storage),
+) -> MediaProcessor:
+    return FFmpegMediaProcessor(storage=storage, settings=get_settings())
 
 
 @lru_cache

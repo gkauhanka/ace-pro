@@ -26,6 +26,7 @@ The first vertical slice is deliberately narrow:
 | 10 | [Data model and API](./10-data-model-and-api.md) | Define persistent records and client-facing contracts |
 | 11 | [Runtime, observability, and MLOps](./11-runtime-observability-and-mlops.md) | Operate versioned CPU/GPU workloads safely |
 | 12 | [Evaluation and rollout](./12-evaluation-and-rollout.md) | Build ground truth, measure quality, and control release |
+| 13 | [TrackNetV4 baseline experiment](./13-tracknetv4-baseline-evaluation.md) | Run and evaluate the first existing ball-tracking model |
 
 ## System invariants
 
@@ -51,4 +52,3 @@ All components must preserve these rules:
 - **Pattern:** deterministic aggregate over effective events.
 - **Insight:** a publishable pattern with rank, evidence, confidence, and presentation text.
 - **Capability:** an analysis type such as court calibration, return depth, or point outcome.
-

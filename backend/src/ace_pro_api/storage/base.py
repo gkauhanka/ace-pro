@@ -11,9 +11,7 @@ class StoredPart:
 
 
 class ObjectStorage(Protocol):
-    async def create_multipart_upload(
-        self, *, bucket: str, key: str, content_type: str
-    ) -> str: ...
+    async def create_multipart_upload(self, *, bucket: str, key: str, content_type: str) -> str: ...
 
     async def presign_upload_parts(
         self,
@@ -45,3 +43,9 @@ class ObjectStorage(Protocol):
     async def object_size(self, *, bucket: str, key: str) -> int | None: ...
 
     async def delete_object(self, *, bucket: str, key: str) -> None: ...
+
+    async def download_file(self, *, bucket: str, key: str, destination: str) -> None: ...
+
+    async def upload_file(
+        self, *, bucket: str, key: str, source: str, content_type: str
+    ) -> None: ...

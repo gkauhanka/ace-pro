@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "models": [
+    {
+      "capability": "ball_tracking",
+      "name": "TrackNetV4",
+      "repository": "https://github.com/TrackNetV4/TrackNetV4.git",
+      "revision": "cb7eea7988474771ceac7e880bbffc35bfa87bca",
+      "license": "MIT",
+      "checkpoint": {
+        "status": "not_published_at_pinned_revision",
+        "expected_format": ".keras",
+        "sha256": null
+      }
+    },
+    {
+      "capability": "court_keypoints",
+      "name": "TennisCourtDetector",
+      "repository": "https://github.com/yastrebksv/TennisCourtDetector.git",
+      "revision": "e5cd4f1ce26b15361700d3d89e068cbf0e82749e",
+      "license": null,
+      "integration_status": "blocked_until_license_is_confirmed"
+    }
+  ]
+}

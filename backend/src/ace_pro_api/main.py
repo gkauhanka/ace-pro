@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse, Response
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
 from ace_pro_api import __version__
+from ace_pro_api.api.analyses import router as analyses_router
 from ace_pro_api.api.uploads import router as uploads_router
 from ace_pro_api.api.videos import router as videos_router
 from ace_pro_api.config import get_settings
@@ -32,11 +33,14 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Ace Pro API",
-        description="Control plane for resumable tennis-match video uploads.",
+        description=(
+            "Control plane for resumable tennis-match video uploads and evidence-backed analysis."
+        ),
         version=__version__,
         lifespan=lifespan,
     )
     install_error_handlers(app)
+    app.include_router(analyses_router)
     app.include_router(uploads_router)
     app.include_router(videos_router)
 
@@ -71,6 +75,10 @@ def create_app() -> FastAPI:
     @app.get("/test-client", include_in_schema=False)
     async def test_client() -> FileResponse:
         return FileResponse(STATIC_DIR / "upload-test.html")
+
+    @app.get("/analysis-review", include_in_schema=False)
+    async def analysis_review() -> FileResponse:
+        return FileResponse(STATIC_DIR / "analysis-review.html")
 
     return app
 

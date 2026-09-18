@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ace Pro · Match review</title>
+<style>
+body{font:16px/1.6 system-ui,sans-serif;background:#f3f5ef;color:#18382d;margin:0}main{max-width:960px;margin:auto;padding:32px 20px}section,article{background:white;padding:24px;border:1px solid #dce3d6;border-radius:14px;margin:18px 0}h1{font-size:36px;line-height:1.2}h2{font-size:22px}label{display:block;margin:12px 0}input,select,button{font:inherit;padding:9px;border:1px solid #a9b8a7;border-radius:6px}input{max-width:100%;box-sizing:border-box}button{background:#204f3c;color:white;cursor:pointer;margin:8px 8px 8px 0}button:disabled{opacity:.5;cursor:wait}video{width:100%;max-height:420px;background:#13241d}a{color:#245b43}.meta{color:#526759}.fields{display:flex;gap:18px;flex-wrap:wrap}#message{white-space:pre-wrap}#message.error{color:#9b2727}table{border-collapse:collapse;width:100%}th,td{text-align:left;border-bottom:1px solid #ddd;padding:10px}code{overflow-wrap:anywhere}
+</style>
+<main>
+<a href="/test-client">← Upload a match</a>
+<h1>Match review</h1>
+<p>Review returns, inspect their evidence, and help your coach identify a practice priority.</p>
+<p class="meta">Research prototype · Events currently come from human annotations. Automatic tennis detection is not connected.</p>
+<section>
+<h2>Open a match analysis</h2>
+<form id="create"><label>Uploaded video ID <input id="videoId" required></label><button>Create or resume analysis</button></form>
+<form id="load"><label>Existing analysis ID <input id="analysisId" required></label><button>Load report</button></form>
+</section>
+<p id="message" role="status" aria-live="polite"></p>
+<section id="report" hidden>
+<h2>Analysis status</h2><p id="status"></p>
+<form id="import"><label>Import reviewed point annotations (JSON) <input id="annotations" type="file" accept=".json,application/json" required></label>
+<p class="meta">Use the format in backend/examples/return-depth-annotations.json with timestamps from your own footage. “Target” means the player whose returns you are reviewing.</p>
+<button>Import annotations and calculate insight</button></form>
+<button id="refresh" type="button">Refresh report</button>
+</section>
+<div id="insights"></div><div id="evidence"></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let currentId = '';
+function node(tag, text, parent) { const item = document.createElement(tag); if (text !== undefined) item.textContent = text; if (parent) parent.append(item); return item; }
+async function api(path, method = 'GET', body) {
+  const response = await fetch('/api/v1' + path, {method, headers:{'Content-Type':'application/json'}, body: body === undefined ? undefined : JSON.stringify(body)});
+  const data = await response.json();
+  if (!response.ok) { const error = new Error(typeof data.message === 'string' ? data.message : JSON.stringify(data.detail || data)); error.status = response.status; throw error; }
+  return data;
+}
+async function action(work) {
+  document.querySelectorAll('button').forEach(b => b.disabled = true);
+  $('message').className = ''; $('message').textContent = 'Working…';
+  try { await work(); $('message').textContent = 'Report is up to date.'; }
+  catch (error) { $('message').className = 'error'; $('message').textContent = error.status === 409 ? 'This event changed since you opened it. Refresh the report, review the latest values, and try again.' : error.message; }
+  finally { document.querySelectorAll('button').forEach(b => b.disabled = false); }
+}
+function select(parent, title, values, selected) {
+  const label = node('label', title + ' ', parent), input = node('select', undefined, label);
+  for (const value of values) { const option = node('option', value, input); option.value = value; }
+  input.value = selected; return input;
+}
+function render(data) {
+  currentId = data.analysis.analysis_id; $('analysisId').value = currentId;
+  const url = new URL(location.href); url.search = ''; url.searchParams.set('analysis', currentId); history.replaceState(null, '', url);
+  $('report').hidden = false;
+  $('status').textContent = `${data.analysis.status} · ${data.analysis.stage} · snapshot ${data.analysis.snapshot_version}`;
+  if (data.analysis.failure_message) $('status').textContent += ' · ' + data.analysis.failure_message;
+  $('import').hidden = data.analysis.status !== 'awaiting_annotations';
+  $('insights').replaceChildren(); $('evidence').replaceChildren();
+  for (const insight of data.insights) {
+    const card = node('section', undefined, $('insights'));
+    node('h2', insight.title, card); node('p', insight.summary, card);
+    node('p', `Status: ${insight.status} · Confidence indicator: ${insight.confidence} (not a calibrated probability)`, card);
+    const table = node('table', undefined, card), head = node('tr', undefined, node('thead', undefined, table));
+    ['Backhand return','Points','Losses','Loss rate'].forEach(t => node('th', t, head));
+    const body = node('tbody', undefined, table);
+    for (const zone of ['short','deep']) {
+      const metric = insight.metrics[zone], row = node('tr', undefined, body);
+      [zone, metric.points, metric.losses, metric.points ? `${(metric.loss_rate * 100).toFixed(1)}%` : 'Insufficient data'].forEach(t => node('td', String(t), row));
+    }
+    node('p', 'Review these observations with your coach. An association does not establish why a point was lost.', card);
+  }
+  if (!data.evidence.length) { node('p', 'No point evidence yet. Import annotations to begin review.', $('evidence')); return; }
+  node('h2', 'Point evidence and corrections', $('evidence'));
+  for (const event of data.evidence) {
+    const card = node('article', undefined, $('evidence'));
+    node('h3', `Point ${event.point_number}`, card);
+    node('p', `Original video: ${(event.point_start_ms / 1000).toFixed(2)}–${(event.point_end_ms / 1000).toFixed(2)}s · Return: ${(event.return_timestamp_ms / 1000).toFixed(2)}s · Revision ${event.event_revision}`, card);
+    if (event.clip_playback_url) {
+      const url = new URL(event.clip_playback_url, location.origin);
+      if (['http:', 'https:'].includes(url.protocol)) {
+        const video = node('video', undefined, card); video.controls = true; video.preload = 'none'; video.src = url.href;
+        video.addEventListener('error', () => node('p', 'Clip could not be loaded. Refresh the report or check the media service.', card), {once:true});
+      }
+    } else node('p', `Clip unavailable (${event.clip_status || 'not generated'}).`, card);
+    const form = node('form', undefined, card), fields = node('div', undefined, form); fields.className = 'fields';
+    const stroke = select(fields, 'Stroke', ['forehand','backhand','unknown'], event.stroke_side);
+    const zone = select(fields, 'Return depth', ['short','deep','unknown'], event.landing_zone);
+    const winner = select(fields, 'Point winner', ['target','opponent','unknown'], event.winner_role);
+    const label = node('label', 'Reason for correction ', form), reason = node('input', undefined, label); reason.maxLength = 255;
+    node('button', 'Save correction and recalculate', form);
+    form.addEventListener('submit', e => { e.preventDefault(); action(async () => {
+      const changes = {};
+      for (const [key, value] of Object.entries({stroke_side:stroke.value, landing_zone:zone.value, winner_role:winner.value})) if (value !== event[key]) changes[key] = value;
+      if (!Object.keys(changes).length) throw new Error('Change a field before saving a correction.');
+      await api(`/events/${encodeURIComponent(event.event_id)}/corrections`, 'POST', {...changes, base_revision:event.event_revision, reason:reason.value || 'reviewed_clip'});
+      await refresh();
+    }); });
+  }
+}
+async function refresh() { render(await api(`/analyses/${encodeURIComponent(currentId)}`)); }
+$('create').addEventListener('submit', e => { e.preventDefault(); action(async () => {
+  const job = await api(`/videos/${encodeURIComponent($('videoId').value.trim())}/analyses`, 'POST'); currentId = job.analysis_id; await refresh();
+}); });
+$('load').addEventListener('submit', e => { e.preventDefault(); action(async () => { currentId = $('analysisId').value.trim(); await refresh(); }); });
+$('refresh').addEventListener('click', () => action(refresh));
+$('import').addEventListener('submit', e => { e.preventDefault(); action(async () => {
+  const file = $('annotations').files[0]; if (!file || file.size > 2 * 1024 * 1024) throw new Error('Choose a JSON annotation file smaller than 2 MiB.');
+  let data; try { data = JSON.parse(await file.text()); } catch { throw new Error('The annotation file is not valid JSON.'); }
+  render(await api(`/analyses/${encodeURIComponent(currentId)}/annotations`, 'POST', data));
+}); });
+const params = new URLSearchParams(location.search);
+if (params.has('video')) $('videoId').value = params.get('video');
+if (params.has('analysis')) { currentId = params.get('analysis'); action(refresh); }
+</script>
+</html>

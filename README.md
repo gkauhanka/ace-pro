@@ -16,6 +16,13 @@ The first SwiftUI app prototype lives in [`ios`](./ios). It uses mocked match da
 
 The proposed hybrid, evidence-backed analysis architecture is recorded in [ADR-0001](./docs/adr/0001-hybrid-evidence-backed-video-analysis.md). Its implementation contracts are split into the [video-analysis technical specifications](./docs/video-analysis/README.md), covering orchestration, media processing, quality checks, vision inference, tennis events, insights, clips, corrections, APIs, operations, and evaluation.
 
+## Model evaluation harness
+
+The first existing-model adapter and evaluation workflow lives in [`ml`](./ml). It pins TrackNetV4,
+normalizes ball predictions, renders review overlays, validates match/player-isolated dataset splits,
+and reports component metrics. Real-footage inference requires a provenance-tracked tennis checkpoint;
+the upstream project does not currently publish one through its documented links.
+
 ## Next action items
 
 - Interview a tennis coach about how they evaluate players and review match footage.

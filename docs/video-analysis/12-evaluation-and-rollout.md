@@ -19,6 +19,12 @@ Begin with at least 5–10 representative fixed-camera singles matches. Expand b
 
 Split by complete match and player, never by random frames, to avoid leakage from adjacent video and repeated identities.
 
+The first automated component dataset targets ball tracking. Dataset construction, validation, and
+report generation use the CLI in [`ml`](../../ml/README.md). Internal team members or contracted
+reviewers create the reviewed ground truth. Ordinary app users are not required to annotate footage;
+their corrections remain a separate product record unless later reviewed and explicitly admitted to
+a versioned dataset.
+
 ## Annotation schema
 
 Label:
@@ -49,6 +55,13 @@ These are proposed gates to revise from observed data:
 | Short/deep zone | macro accuracy/F1 | at least 0.90 |
 | Point winner | accuracy | at least 0.95 |
 | Complete insight | agreement with manual calculation | at least 0.90 |
+
+For ball experiments, a prediction is a true positive only when both labels are visible and their
+Euclidean pixel distance is within the declared tolerance. A visible prediction outside tolerance is
+one false positive and one false negative and is also reported as a localization miss. Reports must
+include frame coverage and the coordinate-error distribution for every visible/visible pair. The
+tolerance must be derived from the downstream court-coordinate and bounce-zone error budget before a
+release gate is accepted; 10 pixels is only the initial debugging default.
 
 Publication thresholds should favor precision over coverage. An unknown or review-required result is preferable to an incorrect confident claim.
 
@@ -108,4 +121,3 @@ Pause expansion if:
 - No unsupported capability is presented as successful.
 - The first automated insight agrees with manual ground truth on held-out matches.
 - Product rollout advances based on both technical quality and observed usefulness.
-

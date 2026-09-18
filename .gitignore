@@ -43,3 +43,10 @@ htmlcov/
 *.tfstate.*
 *.tfplan
 terraform.tfvars
+
+# Local model experiments
+ml/vendor/
+ml/runs/
+ml/reports/
+*.keras
+*.weights.h5

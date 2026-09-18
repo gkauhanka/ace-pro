@@ -52,6 +52,7 @@
     </section>
     <section>
       <h2>Current result</h2>
+      <p><a id="reviewLink" href="/analysis-review" hidden>Review this match →</a></p>
       <dl><dt>Video ID</dt><dd><code id="videoId">—</code></dd><dt>Storage path</dt><dd><code id="storagePath">—</code></dd><dt>Playback URL</dt><dd><code id="playbackUrl">—</code></dd></dl>
       <div class="actions"><button id="delete" class="danger" type="button" disabled>Delete video</button></div>
       <video id="player" controls hidden></video>
@@ -119,7 +120,7 @@
         } finally { el.pause.disabled = true; el.start.disabled = false; el.resume.disabled = false; }
       }
 
-      function showResult(result) { el.videoId.textContent = result.video_id; el.storagePath.textContent = result.storage_path; el.playbackUrl.textContent = result.playback_url; el.delete.disabled = false; el.player.src = result.playback_url; el.player.hidden = false; }
+      function showResult(result) { el.videoId.textContent = result.video_id; el.storagePath.textContent = result.storage_path; el.playbackUrl.textContent = result.playback_url; el.delete.disabled = false; el.player.src = result.playback_url; el.player.hidden = false; const link = document.getElementById('reviewLink'); link.href = '/analysis-review?video=' + encodeURIComponent(result.video_id); link.hidden = false; }
       el.file.addEventListener("change", async () => { selectedFile = el.file.files[0] || null; selectedDuration = null; if (!selectedFile) { setMessage("Choose a video to begin."); return; } try { setMessage("Reading video metadata…"); selectedDuration = await readDuration(selectedFile); setMessage(`Ready to upload ${selectedFile.name} (${selectedDuration} seconds).`); } catch (error) { setMessage(error.message, "error"); } });
       el.start.addEventListener("click", async () => { try { const duration = validate(selectedFile); const created = await jsonRequest(`${api}/uploads`, { method:"POST", headers:{ "Idempotency-Key":crypto.randomUUID() }, body:JSON.stringify({ original_filename:selectedFile.name, content_type:selectedFile.type || "application/octet-stream", container:containerFor(selectedFile), codec:"unknown", size_bytes:selectedFile.size, duration_seconds:duration, source_fingerprint:fingerprint(selectedFile) }) }); const session = { ...created, fingerprint:fingerprint(selectedFile), file_size:selectedFile.size, parts:[] }; saveSession(session); el.videoId.textContent = created.video_id; await runUpload(selectedFile, session); } catch (error) { setMessage(error.message, "error"); } });
       el.resume.addEventListener("click", async () => { try { validate(selectedFile); if (!saved) throw new Error("No saved upload exists in this browser."); if (saved.fingerprint !== fingerprint(selectedFile)) throw new Error("Select the same unchanged file used to start the upload."); await runUpload(selectedFile, saved); } catch (error) { setMessage(error.message, "error"); } });

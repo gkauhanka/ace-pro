@@ -61,6 +61,19 @@ Persist:
 
 Interpolation across short gaps is allowed only when the method, source observations, and reduced confidence are recorded. Long gaps remain missing.
 
+### Initial baseline
+
+The first implemented baseline is the official TensorFlow TrackNetV4 repository pinned to commit
+`cb7eea7988474771ceac7e880bbffc35bfa87bca`. The model executes outside the API process through the
+[`ml`](../../ml/README.md) adapter. The adapter preserves the upstream 512×288, three-frame input,
+normalizes output to real sequential frame indices and integer timestamps, and records source and
+artifact checksums.
+
+The checkpoint is a separate immutable dependency. The pinned upstream results page contains
+placeholder checkpoint links, so no checkpoint is considered approved until its source and SHA-256
+are recorded in `ml/models.lock.json`. This is an integration baseline, not evidence that the model
+works on Ace Pro capture conditions.
+
 ## Artifact format
 
 Use a columnar representation such as Parquet for dense frame predictions and JSON manifests for metadata. PostgreSQL stores artifact references and extracted event-level results, not every raw frame observation.
@@ -94,4 +107,3 @@ A component can fail independently. Court-calibration failure disables court-coo
 ## Reference
 
 - [TrackNet paper](https://arxiv.org/abs/1907.03698)
-

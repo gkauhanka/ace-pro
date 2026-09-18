@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "dataset_name": "ace-pro-ball-pilot",
+  "dataset_version": "0.1.0",
+  "annotation_guide_version": "0.1.0",
+  "sequences": [
+    {
+      "sequence_id": "synthetic-sequence-001",
+      "match_id": "synthetic-match-001",
+      "player_id": "synthetic-player-001",
+      "split": "test",
+      "video_path": "synthetic-sequence-001.mp4",
+      "ground_truth_path": "ground-truth.jsonl",
+      "fps": 30.0,
+      "width_px": 320,
+      "height_px": 180,
+      "annotator_ids": ["example-annotator"],
+      "review_status": "reviewed"
+    }
+  ]
+}

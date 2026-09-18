@@ -6,7 +6,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from ace_pro_api.domain.enums import UploadStatus
-from ace_pro_api.persistence.models import UploadPart, UploadSession, Video
+from ace_pro_api.persistence.models import (
+    AnalysisEvent,
+    AnalysisJob,
+    AnalyzedPoint,
+    EventCorrection,
+    EvidenceClip,
+    Insight,
+    UploadPart,
+    UploadSession,
+    Video,
+)
 
 
 class SqlAlchemyVideoRepository:
@@ -73,9 +83,7 @@ class SqlAlchemyUploadRepository:
         )
         return result.all()
 
-    async def list_expired_active(
-        self, *, now: datetime, limit: int
-    ) -> Sequence[UploadSession]:
+    async def list_expired_active(self, *, now: datetime, limit: int) -> Sequence[UploadSession]:
         result = await self._session.scalars(
             select(UploadSession)
             .options(selectinload(UploadSession.video))
@@ -89,3 +97,98 @@ class SqlAlchemyUploadRepository:
             .limit(limit)
         )
         return result.all()
+
+
+class SqlAlchemyAnalysisRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def add_job(self, job: AnalysisJob) -> AnalysisJob:
+        self._session.add(job)
+        await self._session.flush()
+        return job
+
+    async def get_job(self, job_id: str) -> AnalysisJob | None:
+        return await self._session.scalar(
+            select(AnalysisJob)
+            .execution_options(populate_existing=True)
+            .options(
+                selectinload(AnalysisJob.video),
+                selectinload(AnalysisJob.insights),
+                selectinload(AnalysisJob.clips),
+            )
+            .where(AnalysisJob.id == job_id)
+        )
+
+    async def get_by_video_version(
+        self, video_id: str, pipeline_version: str
+    ) -> AnalysisJob | None:
+        return await self._session.scalar(
+            select(AnalysisJob).where(
+                AnalysisJob.video_id == video_id,
+                AnalysisJob.pipeline_version == pipeline_version,
+            )
+        )
+
+    async def save_job(self, job: AnalysisJob) -> AnalysisJob:
+        saved = await self._session.merge(job)
+        await self._session.flush()
+        return saved
+
+    async def replace_points(
+        self, job_id: str, points: Sequence[AnalyzedPoint]
+    ) -> Sequence[AnalyzedPoint]:
+        point_ids = select(AnalyzedPoint.id).where(AnalyzedPoint.job_id == job_id)
+        event_ids = select(AnalysisEvent.id).where(AnalysisEvent.point_id.in_(point_ids))
+        await self._session.execute(
+            delete(EventCorrection).where(EventCorrection.event_id.in_(event_ids))
+        )
+        await self._session.execute(
+            delete(AnalysisEvent).where(AnalysisEvent.point_id.in_(point_ids))
+        )
+        await self._session.execute(delete(EvidenceClip).where(EvidenceClip.job_id == job_id))
+        await self._session.execute(delete(Insight).where(Insight.job_id == job_id))
+        await self._session.execute(delete(AnalyzedPoint).where(AnalyzedPoint.job_id == job_id))
+        self._session.add_all(points)
+        await self._session.flush()
+        return points
+
+    async def list_points(self, job_id: str) -> Sequence[AnalyzedPoint]:
+        result = await self._session.scalars(
+            select(AnalyzedPoint)
+            .options(
+                selectinload(AnalyzedPoint.events).selectinload(AnalysisEvent.corrections),
+                selectinload(AnalyzedPoint.clip),
+            )
+            .where(AnalyzedPoint.job_id == job_id)
+            .order_by(AnalyzedPoint.sequence_number)
+        )
+        return result.all()
+
+    async def replace_insight(self, job_id: str, insight: Insight) -> Insight:
+        await self._session.execute(delete(Insight).where(Insight.job_id == job_id))
+        self._session.add(insight)
+        await self._session.flush()
+        return insight
+
+    async def get_event(self, event_id: str) -> AnalysisEvent | None:
+        return await self._session.scalar(
+            select(AnalysisEvent)
+            .options(
+                selectinload(AnalysisEvent.corrections),
+                selectinload(AnalysisEvent.point)
+                .selectinload(AnalyzedPoint.job)
+                .selectinload(AnalysisJob.video),
+            )
+            .where(AnalysisEvent.id == event_id)
+        )
+
+    async def add_correction(self, correction: EventCorrection) -> EventCorrection:
+        self._session.add(correction)
+        await self._session.flush()
+        return correction
+
+    async def save_event(self, event: AnalysisEvent) -> AnalysisEvent:
+        saved = await self._session.merge(event)
+        await self._session.flush()
+        return saved

@@ -33,6 +33,13 @@ Human corrections will be stored as overlays on immutable machine predictions. C
 
 Analysis will initially be an offline job, not a real-time endpoint. Local development will use containerized workers. The intended production shape is S3, a durable queue, PostgreSQL, versioned containers, and scale-to-zero GPU batch compute.
 
+The first existing-model experiment will use TrackNetV4 for ball tracking behind an out-of-process
+adapter pinned by repository revision and checkpoint checksum. Its output is normalized into an Ace
+Pro-owned artifact schema and measured on a match/player-isolated evaluation dataset before it can
+replace any manual label. The adapter is implemented under [`ml`](../../ml/README.md). A candidate
+court detector was reviewed but is not integrated because its upstream repository does not state a
+license; model availability does not override provenance and deployment requirements.
+
 ## Decision boundaries
 
 ### In scope
@@ -129,4 +136,3 @@ This ADR becomes **Accepted** only when a local vertical slice can:
 - [AWS Batch GPU jobs](https://docs.aws.amazon.com/batch/latest/userguide/gpu-jobs.html)
 - [MediaConvert job progress](https://docs.aws.amazon.com/mediaconvert/latest/ug/how-mediaconvert-jobs-progress.html)
 - [SageMaker Model Registry](https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry.html)
-

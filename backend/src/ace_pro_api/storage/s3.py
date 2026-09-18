@@ -125,10 +125,7 @@ class S3ObjectStorage:
                 Key=key,
                 UploadId=multipart_upload_id,
                 MultipartUpload={
-                    "Parts": [
-                        {"ETag": part.etag, "PartNumber": part.part_number}
-                        for part in parts
-                    ]
+                    "Parts": [{"ETag": part.etag, "PartNumber": part.part_number} for part in parts]
                 },
             )
         )
@@ -150,3 +147,17 @@ class S3ObjectStorage:
 
     async def delete_object(self, *, bucket: str, key: str) -> None:
         await to_thread.run_sync(partial(self._client.delete_object, Bucket=bucket, Key=key))
+
+    async def download_file(self, *, bucket: str, key: str, destination: str) -> None:
+        await to_thread.run_sync(self._client.download_file, bucket, key, destination)
+
+    async def upload_file(self, *, bucket: str, key: str, source: str, content_type: str) -> None:
+        await to_thread.run_sync(
+            partial(
+                self._client.upload_file,
+                source,
+                bucket,
+                key,
+                ExtraArgs={"ContentType": content_type},
+            )
+        )

@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "ace-pro-api"
 version = "0.1.0"
-description = "Ace Pro video upload control-plane API"
+description = "Ace Pro video upload and evidence-backed analysis API"
 requires-python = ">=3.11"
 dependencies = [
   "alembic>=1.14,<2",

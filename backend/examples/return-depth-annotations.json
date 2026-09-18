@@ -1,0 +1,103 @@
+{
+  "points": [
+    {
+      "sequence_number": 1,
+      "start_ms": 10000,
+      "end_ms": 18000,
+      "winner_role": "opponent",
+      "return_event": {
+        "timestamp_ms": 12000,
+        "stroke_side": "backhand",
+        "landing_zone": "short"
+      }
+    },
+    {
+      "sequence_number": 2,
+      "start_ms": 20000,
+      "end_ms": 28000,
+      "winner_role": "opponent",
+      "return_event": {
+        "timestamp_ms": 22000,
+        "stroke_side": "backhand",
+        "landing_zone": "short"
+      }
+    },
+    {
+      "sequence_number": 3,
+      "start_ms": 30000,
+      "end_ms": 38000,
+      "winner_role": "opponent",
+      "return_event": {
+        "timestamp_ms": 32000,
+        "stroke_side": "backhand",
+        "landing_zone": "short"
+      }
+    },
+    {
+      "sequence_number": 4,
+      "start_ms": 40000,
+      "end_ms": 48000,
+      "winner_role": "opponent",
+      "return_event": {
+        "timestamp_ms": 42000,
+        "stroke_side": "backhand",
+        "landing_zone": "short"
+      }
+    },
+    {
+      "sequence_number": 5,
+      "start_ms": 50000,
+      "end_ms": 58000,
+      "winner_role": "target",
+      "return_event": {
+        "timestamp_ms": 52000,
+        "stroke_side": "backhand",
+        "landing_zone": "short"
+      }
+    },
+    {
+      "sequence_number": 6,
+      "start_ms": 60000,
+      "end_ms": 68000,
+      "winner_role": "target",
+      "return_event": {
+        "timestamp_ms": 62000,
+        "stroke_side": "backhand",
+        "landing_zone": "short"
+      }
+    },
+    {
+      "sequence_number": 7,
+      "start_ms": 70000,
+      "end_ms": 78000,
+      "winner_role": "opponent",
+      "return_event": {
+        "timestamp_ms": 72000,
+        "stroke_side": "backhand",
+        "landing_zone": "deep"
+      }
+    },
+    {
+      "sequence_number": 8,
+      "start_ms": 80000,
+      "end_ms": 88000,
+      "winner_role": "target",
+      "return_event": {
+        "timestamp_ms": 82000,
+        "stroke_side": "backhand",
+        "landing_zone": "deep"
+      }
+    },
+    {
+      "sequence_number": 9,
+      "start_ms": 90000,
+      "end_ms": 98000,
+      "winner_role": "target",
+      "return_event": {
+        "timestamp_ms": 92000,
+        "stroke_side": "backhand",
+        "landing_zone": "deep"
+      }
+    }
+  ]
+}

@@ -75,13 +75,15 @@ Discovery entries belong in [`discovery/`](./discovery/).
 
 Experiment entries belong in [`experiments/`](./experiments/).
 
-<!-- Add dated experiment entries here. -->
+- [TrackNetV4 baseline harness](./experiments/2026-09-03-tracknetv4-baseline-harness.md) — September 3, 2026
 
 ## Development
 
+- [Browser Analysis Review](./development/2026-09-17-browser-analysis-review.md) — September 17, 2026
+
 Development entries belong in [`development/`](./development/).
 
-<!-- Add dated development entries here. -->
+- [Manual return-depth analysis vertical slice](./development/2026-09-03-manual-analysis-vertical-slice.md) — September 3, 2026
 
 ## Commit message examples
 

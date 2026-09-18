@@ -1,0 +1,6 @@
+{"confidence":1.0,"frame_index":0,"timestamp_ms":0,"visible":true,"x_px":102.0,"y_px":99.0}
+{"confidence":1.0,"frame_index":1,"timestamp_ms":33,"visible":true,"x_px":113.0,"y_px":106.0}
+{"confidence":1.0,"frame_index":2,"timestamp_ms":67,"visible":false,"x_px":null,"y_px":null}
+{"confidence":1.0,"frame_index":3,"timestamp_ms":100,"visible":true,"x_px":144.0,"y_px":121.0}
+{"confidence":1.0,"frame_index":4,"timestamp_ms":133,"visible":false,"x_px":null,"y_px":null}
+{"confidence":1.0,"frame_index":5,"timestamp_ms":167,"visible":true,"x_px":190.0,"y_px":150.0}
