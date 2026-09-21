@@ -1,7 +1,8 @@
 // !$*UTF8*$!
 {
 	archiveVersion = 1;
-	classes = {};
+	classes = {
+	};
 	objectVersion = 56;
 	objects = {
 
@@ -16,8 +17,9 @@
 		A00100000000000000000008 /* InsightDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00100000000000000000008 /* InsightDetailView.swift */; };
 		A00100000000000000000009 /* UploadFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00100000000000000000009 /* UploadFlowView.swift */; };
 		A0010000000000000000000A /* SupportingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0010000000000000000000A /* SupportingViews.swift */; };
-		A0010000000000000000000B = {isa = PBXBuildFile; fileRef = B0010000000000000000000B; };
-		A0010000000000000000000C = {isa = PBXBuildFile; fileRef = B0010000000000000000000C; };
+		A0010000000000000000000B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B0010000000000000000000B /* PrivacyInfo.xcprivacy */; };
+		A0010000000000000000000C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0010000000000000000000C /* Assets.xcassets */; };
+		A0010000000000000000000D /* OnDeviceVideoAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0010000000000000000000D /* OnDeviceVideoAnalysis.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,59 +34,253 @@
 		B00100000000000000000008 /* InsightDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightDetailView.swift; sourceTree = "<group>"; };
 		B00100000000000000000009 /* UploadFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadFlowView.swift; sourceTree = "<group>"; };
 		B0010000000000000000000A /* SupportingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingViews.swift; sourceTree = "<group>"; };
-		B0010000000000000000000B = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		B0010000000000000000000C = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B0010000000000000000000B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B0010000000000000000000C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B0010000000000000000000D /* OnDeviceVideoAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDeviceVideoAnalysis.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C00100000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		C00100000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D00100000000000000000000 = {isa = PBXGroup; children = (D00100000000000000000001 /* AcePro */, D00100000000000000000002 /* Products */); sourceTree = "<group>"; };
-		D00100000000000000000001 /* AcePro */ = {isa = PBXGroup; children = (
-            B0010000000000000000000B, B0010000000000000000000C,
-			B00100000000000000000001 /* AceProApp.swift */, B00100000000000000000002 /* Models.swift */,
-			B00100000000000000000003 /* MockData.swift */, B00100000000000000000004 /* Theme.swift */,
-			B00100000000000000000005 /* RootView.swift */, B00100000000000000000006 /* HomeView.swift */,
-			B00100000000000000000007 /* MatchesView.swift */, B00100000000000000000008 /* InsightDetailView.swift */,
-			B00100000000000000000009 /* UploadFlowView.swift */, B0010000000000000000000A /* SupportingViews.swift */,
-		); path = AcePro; sourceTree = "<group>"; };
-		D00100000000000000000002 /* Products */ = {isa = PBXGroup; children = (B00100000000000000000000 /* AcePro.app */); name = Products; sourceTree = "<group>"; };
+		D00100000000000000000000 = {
+			isa = PBXGroup;
+			children = (
+				D00100000000000000000001 /* AcePro */,
+				D00100000000000000000002 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D00100000000000000000001 /* AcePro */ = {
+			isa = PBXGroup;
+			children = (
+				B0010000000000000000000B /* PrivacyInfo.xcprivacy */,
+				B0010000000000000000000C /* Assets.xcassets */,
+				B00100000000000000000001 /* AceProApp.swift */,
+				B00100000000000000000002 /* Models.swift */,
+				B00100000000000000000003 /* MockData.swift */,
+				B00100000000000000000004 /* Theme.swift */,
+				B00100000000000000000005 /* RootView.swift */,
+				B00100000000000000000006 /* HomeView.swift */,
+				B00100000000000000000007 /* MatchesView.swift */,
+				B00100000000000000000008 /* InsightDetailView.swift */,
+				B00100000000000000000009 /* UploadFlowView.swift */,
+				B0010000000000000000000A /* SupportingViews.swift */,
+				B0010000000000000000000D /* OnDeviceVideoAnalysis.swift */,
+			);
+			path = AcePro;
+			sourceTree = "<group>";
+		};
+		D00100000000000000000002 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B00100000000000000000000 /* AcePro.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E00100000000000000000001 /* AcePro */ = {isa = PBXNativeTarget; buildConfigurationList = F00100000000000000000001 /* Build configuration list for PBXNativeTarget "AcePro" */; buildPhases = (C00100000000000000000002 /* Sources */, C00100000000000000000001 /* Frameworks */, C00100000000000000000003 /* Resources */); buildRules = (); dependencies = (); name = AcePro; productName = AcePro; productReference = B00100000000000000000000 /* AcePro.app */; productType = "com.apple.product-type.application"; };
+		E00100000000000000000001 /* AcePro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F00100000000000000000001 /* Build configuration list for PBXNativeTarget "AcePro" */;
+			buildPhases = (
+				C00100000000000000000002 /* Sources */,
+				C00100000000000000000001 /* Frameworks */,
+				C00100000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AcePro;
+			productName = AcePro;
+			productReference = B00100000000000000000000 /* AcePro.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		E00100000000000000000000 /* Project object */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = {E00100000000000000000001 = {CreatedOnToolsVersion = 16.0; };};}; buildConfigurationList = F00100000000000000000000 /* Build configuration list for PBXProject "AcePro" */; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base); mainGroup = D00100000000000000000000; productRefGroup = D00100000000000000000002 /* Products */; projectDirPath = ""; projectRoot = ""; targets = (E00100000000000000000001 /* AcePro */); };
+		E00100000000000000000000 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					E00100000000000000000001 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = F00100000000000000000000 /* Build configuration list for PBXProject "AcePro" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D00100000000000000000000;
+			productRefGroup = D00100000000000000000002 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E00100000000000000000001 /* AcePro */,
+			);
+		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		C00100000000000000000003 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A0010000000000000000000B, A0010000000000000000000C); runOnlyForDeploymentPostprocessing = 0; };
+		C00100000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0010000000000000000000B /* PrivacyInfo.xcprivacy in Resources */,
+				A0010000000000000000000C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		C00100000000000000000002 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
-			A00100000000000000000001 /* AceProApp.swift in Sources */, A00100000000000000000002 /* Models.swift in Sources */,
-			A00100000000000000000003 /* MockData.swift in Sources */, A00100000000000000000004 /* Theme.swift in Sources */,
-			A00100000000000000000005 /* RootView.swift in Sources */, A00100000000000000000006 /* HomeView.swift in Sources */,
-			A00100000000000000000007 /* MatchesView.swift in Sources */, A00100000000000000000008 /* InsightDetailView.swift in Sources */,
-			A00100000000000000000009 /* UploadFlowView.swift in Sources */, A0010000000000000000000A /* SupportingViews.swift in Sources */,
-		); runOnlyForDeploymentPostprocessing = 0; };
+		C00100000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00100000000000000000001 /* AceProApp.swift in Sources */,
+				A00100000000000000000002 /* Models.swift in Sources */,
+				A00100000000000000000003 /* MockData.swift in Sources */,
+				A00100000000000000000004 /* Theme.swift in Sources */,
+				A00100000000000000000005 /* RootView.swift in Sources */,
+				A00100000000000000000006 /* HomeView.swift in Sources */,
+				A00100000000000000000007 /* MatchesView.swift in Sources */,
+				A00100000000000000000008 /* InsightDetailView.swift in Sources */,
+				A00100000000000000000009 /* UploadFlowView.swift in Sources */,
+				A0010000000000000000000A /* SupportingViews.swift in Sources */,
+				A0010000000000000000000D /* OnDeviceVideoAnalysis.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		F10100000000000000000001 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; DEBUG_INFORMATION_FORMAT = dwarf; ENABLE_TESTABILITY = YES; GCC_C_LANGUAGE_STANDARD = gnu17; GCC_OPTIMIZATION_LEVEL = 0; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE; ONLY_ACTIVE_ARCH = YES; SDKROOT = iphoneos; SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)"; SWIFT_OPTIMIZATION_LEVEL = "-Onone"; }; name = Debug; };
-		F10100000000000000000002 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym"; GCC_C_LANGUAGE_STANDARD = gnu17; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MTL_ENABLE_DEBUG_INFO = NO; SDKROOT = iphoneos; SWIFT_COMPILATION_MODE = wholemodule; VALIDATE_PRODUCT = YES; }; name = Release; };
-		F10100000000000000000003 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES; ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_ASSET_PATHS = ""; DEVELOPMENT_TEAM = ""; ENABLE_PREVIEWS = YES; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_FILE = AcePro/Info.plist; INFOPLIST_KEY_CFBundleDisplayName = "Ace Pro"; INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES; INFOPLIST_KEY_UILaunchScreen_Generation = YES; INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.2.0; PRODUCT_BUNDLE_IDENTIFIER = com.acepro.mobile; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = 1; }; name = Debug; };
-		F10100000000000000000004 /* Release */ = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES; ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_ASSET_PATHS = ""; DEVELOPMENT_TEAM = ""; ENABLE_PREVIEWS = YES; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_FILE = AcePro/Info.plist; INFOPLIST_KEY_CFBundleDisplayName = "Ace Pro"; INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES; INFOPLIST_KEY_UILaunchScreen_Generation = YES; INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.2.0; PRODUCT_BUNDLE_IDENTIFIER = com.acepro.mobile; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_EMIT_LOC_STRINGS = YES; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = 1; }; name = Release; };
+		F10100000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F10100000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F10100000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = K86V38BHJ3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AcePro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ace Pro";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.glebkauhanka.acepro;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F10100000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AcePro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ace Pro";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.acepro.mobile;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F00100000000000000000000 /* Build configuration list for PBXProject "AcePro" */ = {isa = XCConfigurationList; buildConfigurations = (F10100000000000000000001 /* Debug */, F10100000000000000000002 /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		F00100000000000000000001 /* Build configuration list for PBXNativeTarget "AcePro" */ = {isa = XCConfigurationList; buildConfigurations = (F10100000000000000000003 /* Debug */, F10100000000000000000004 /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		F00100000000000000000000 /* Build configuration list for PBXProject "AcePro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F10100000000000000000001 /* Debug */,
+				F10100000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F00100000000000000000001 /* Build configuration list for PBXNativeTarget "AcePro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F10100000000000000000003 /* Debug */,
+				F10100000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 	};
 	rootObject = E00100000000000000000000 /* Project object */;

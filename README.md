@@ -20,7 +20,16 @@ The first backend slice implements resumable direct-to-object-storage video tran
 
 ## On-device iOS coaching experience
 
-The native SwiftUI app in [`ios`](./ios) now includes device accounts, guest access, Photos/Files import, a persistent local video library, simulated processing, metadata-only insights, timestamp playback across videos, practice plans and notes. All random reports are explicitly labeled as examples, not actual video analysis.
+The native SwiftUI app in [`ios`](./ios) includes device accounts, guest access, Photos/Files import, a persistent local video library, timestamp playback, practice plans and notes. Its Apple Vision debug flow performs real analysis directly on the iPhone:
+
+- parabolic motion-candidate tracking with detected time ranges;
+- 2D and 3D human body pose estimation;
+- hand-pose estimation;
+- optical-flow sampling for camera and scene motion;
+- exact-frame pose review and bounded playback for motion candidates; and
+- optional Apple Intelligence summaries generated from the measured results on supported devices.
+
+The built-in Apple algorithms provide measurements, not tennis semantics. Motion candidates are not verified tennis balls, and serve/forehand/backhand labels require separately trained and evaluated Core ML models. Video frames remain on the device during the debug analysis. See the [native iOS instructions](./ios/README.md) and [phased on-device analysis plan](./docs/video-analysis/14-on-device-analysis.md).
 
 Run the working local experience and its single API:
 

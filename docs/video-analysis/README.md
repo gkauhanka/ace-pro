@@ -27,6 +27,7 @@ The first vertical slice is deliberately narrow:
 | 11 | [Runtime, observability, and MLOps](./11-runtime-observability-and-mlops.md) | Operate versioned CPU/GPU workloads safely |
 | 12 | [Evaluation and rollout](./12-evaluation-and-rollout.md) | Build ground truth, measure quality, and control release |
 | 13 | [TrackNetV4 baseline experiment](./13-tracknetv4-baseline-evaluation.md) | Run and evaluate the first existing ball-tracking model |
+| 14 | [On-device video analysis](./14-on-device-analysis.md) | Phase Apple Vision trajectory, pose, Core ML, event fusion, and insights integration |
 
 ## System invariants
 
