@@ -14,8 +14,8 @@ targets:
       - AcePro
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.glebkauhanka.acepro
-        DEVELOPMENT_TEAM: K86V38BHJ3
+        PRODUCT_BUNDLE_IDENTIFIER: com.hlebkauhanka.acepro
+        DEVELOPMENT_TEAM: FWLB6T2SZ3
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_FILE: AcePro/Info.plist
         INFOPLIST_KEY_CFBundleDisplayName: Ace Pro

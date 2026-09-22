@@ -71,10 +71,11 @@ Do not use the browser prototype walkthrough, simulated reports, development end
 
 ## Before uploading
 
-- [ ] Enroll in the paid Apple Developer Program and select its distribution team.
-- [ ] Confirm `com.glebkauhanka.acepro` is registered to that team, or replace it consistently with an owned identifier.
+- [x] Enroll in the paid Apple Developer Program and select the Hleb Kauhanka distribution team.
+- [x] App Store bundle identifier `com.hlebkauhanka.acepro` is configured for the Hleb Kauhanka developer team (`FWLB6T2SZ3`).
 - [ ] Increment `CURRENT_PROJECT_VERSION` for every uploaded build.
-- [ ] Run a signed Release archive and **Validate App** in Xcode Organizer.
+- [x] Create a signed Release archive and local App Store export using Apple Distribution signing.
+- [ ] Run **Validate App** in Xcode Organizer before uploading.
 - [ ] Test importing, analysis cancellation, deletion, low storage, backgrounding, and relaunch on physical devices.
 - [ ] Profile a 60-second analysis for heat, memory, and battery use on the oldest supported iPhone.
 - [ ] Test VoiceOver, Dynamic Type, Reduce Motion, and light-mode contrast.
