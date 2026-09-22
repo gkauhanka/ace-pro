@@ -558,7 +558,7 @@ struct AppleOnDeviceDescriptionGenerator {
             let session = LanguageModelSession(
                 model: model,
                 instructions: """
-                You summarize measured Apple Vision debug results from tennis video. Be concise and factual. Never identify a motion candidate as a tennis ball, never name a stroke, and never diagnose technique unless the input explicitly contains a trained classifier result. Clearly distinguish detections from interpretations.
+                You summarize measured Apple Vision results from tennis video. Be concise and factual. Never identify a motion candidate as a tennis ball, never name a stroke, and never diagnose technique unless the input explicitly contains a trained classifier result. Clearly distinguish detections from interpretations.
                 """
             )
             let strongestTrajectory = result.trajectories.first
@@ -584,7 +584,7 @@ struct AppleOnDeviceDescriptionGenerator {
     }
 }
 
-struct VideoAnalysisDebugView: View {
+struct VideoAnalysisView: View {
     @EnvironmentObject private var store: PlayerStore
     let session: LocalSession
 
@@ -601,8 +601,8 @@ struct VideoAnalysisDebugView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                Text("Apple Vision debug").font(.largeTitle.bold())
-                Text("Runs trajectory, optical-flow, 2D/3D body-pose, and hand-pose analysis directly on this device. No video frames leave the phone.")
+                Text("On-device analysis").font(.largeTitle.bold())
+                Text("Measures trajectories, scene motion, and visible body and hand poses directly on this device. No video frames leave the phone.")
                     .foregroundStyle(AceTheme.muted)
 
                 Card {
@@ -643,7 +643,7 @@ struct VideoAnalysisDebugView: View {
                     VisionDebugPlot(result: result)
 
                     Text("Motion candidates").font(.title2.bold())
-                    Text("Vision detects parabolic motion, not object identity. These tracks are debugging candidates and are not yet verified tennis-ball observations.")
+                    Text("Vision detects parabolic motion, not object identity. These tracks are review candidates and are not verified tennis-ball observations.")
                         .font(.caption).foregroundStyle(AceTheme.muted)
                     if result.trajectories.isEmpty {
                         ContentUnavailableView("No trajectories found", systemImage: "scope", description: Text("Try a stable 1080p clip where the ball is visible for several consecutive frames."))
@@ -751,7 +751,7 @@ struct VideoAnalysisDebugView: View {
             .padding(22)
         }
         .background(AceTheme.cream)
-        .navigationTitle("Vision debug")
+        .navigationTitle("Video analysis")
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear { analysisTask?.cancel() }
     }
@@ -759,13 +759,12 @@ struct VideoAnalysisDebugView: View {
     @ViewBuilder private func resultSummary(_ result: OnDeviceVideoAnalysisResult) -> some View {
         Text("Run summary").font(.title2.bold())
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            debugMetric("\(result.trajectories.count)", "Motion tracks", "scope")
-            debugMetric("\(result.poses.count)", "2D poses", "figure.stand")
-            debugMetric("\(result.poses3D.count)", "3D poses", "rotate.3d")
-            debugMetric("\(result.handPoses.count)", "Hand poses", "hand.raised")
-            debugMetric("\(result.opticalFlow.count)", "Flow samples", "wind")
-            debugMetric("\(result.decodedFrameCount)", "Decoded frames", "film.stack")
-            debugMetric(result.elapsedSeconds.formatted(.number.precision(.fractionLength(1))) + "s", "Processing time", "timer")
+            metric("\(result.trajectories.count)", "Motion tracks", "scope")
+            metric("\(result.poses.count)", "2D poses", "figure.stand")
+            metric("\(result.poses3D.count)", "3D poses", "rotate.3d")
+            metric("\(result.handPoses.count)", "Hand poses", "hand.raised")
+            metric("\(result.opticalFlow.count)", "Scene-motion samples", "wind")
+            metric(result.elapsedSeconds.formatted(.number.precision(.fractionLength(1))) + "s", "Processing time", "timer")
         }
         Text("Analyzed \(videoTime(result.analyzedDurationSeconds)) · \(result.sourceWidth)×\(result.sourceHeight) · \(result.nominalFrameRate.formatted(.number.precision(.fractionLength(1)))) fps source · pose sampled on \(result.poseFrameCount) frames")
             .font(.caption).foregroundStyle(AceTheme.muted)
@@ -832,7 +831,7 @@ struct VideoAnalysisDebugView: View {
         .buttonStyle(.plain)
     }
 
-    private func debugMetric(_ value: String, _ label: String, _ icon: String) -> some View {
+    private func metric(_ value: String, _ label: String, _ icon: String) -> some View {
         Card {
             VStack(alignment: .leading, spacing: 7) {
                 Image(systemName: icon).foregroundStyle(AceTheme.forest)
@@ -899,7 +898,7 @@ private struct VisionDebugPlot: View {
         Card {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Text("Normalized detections").font(.headline)
+                    Text("Detection overview").font(.headline)
                     Spacer()
                     Label("motion", systemImage: "circle.fill").foregroundStyle(.yellow)
                     Label("pose", systemImage: "circle.fill").foregroundStyle(AceTheme.lime)

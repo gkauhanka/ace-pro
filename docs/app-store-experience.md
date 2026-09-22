@@ -1,52 +1,41 @@
-# Ace Pro: product and release boundary
+# Ace Pro release boundary
 
-## Product design
+## Public product
 
-Ace Pro is a private tennis video journal with clearly labeled, randomly generated coaching inspiration. The core loop is **save a session → review local footage → choose one focus → practice → record your observations**.
+The App Store build is a private, on-device tennis video review and journaling application. It imports a user-selected local video, runs supported Apple Vision measurements on the iPhone, links measurements to reviewable frames or time ranges, and lets the user record personal observations.
 
-The visual direction is warm white, deep court green and tennis-ball lime; generous rounded cards, restrained statistics and a four-tab native navigation: Today, Library, Improve, Profile. Real utility comes from keeping videos organized, playing review points, writing personal notes and carrying a practice plan onto the court.
+It does not claim to identify tennis balls, classify strokes, score technique, or provide evidence-backed coaching conclusions. Those capabilities remain research work until separately trained models pass the evaluation gates documented in `docs/video-analysis`.
 
-Example coaching topics: split-step timing, contact spacing, recovery position, second-serve consistency and rally depth. Each report has three priorities, a sample percentage, a cue, an actionable drill, a YouTube tutorial link and three illustrative timestamps. Related topics are grouped across sessions. Random percentages must never become a claimed progress trend or evidence of an actual error.
+The randomized `insights-api` remains a browser prototype only. It is not called by, configured in, or presented as functionality of the App Store build.
 
-## Data boundary
+## Release data boundary
 
-| Information | Native storage | Network |
+| Information | Storage | Network |
 | --- | --- | --- |
-| Videos | Protected app-private files, excluded from backup | Never sent |
-| Profile/email/password derivative | Device-only Keychain | Never sent |
-| Reports, observations | Local JSON | Never sent |
-| Saved drill IDs, service setting | UserDefaults | Never sent |
-| Duration, session type, focus | Included in local report context | One JSON request per analysis attempt |
-| Connection information | Host-dependent | IP/request logs may be retained by hosting infrastructure |
+| Imported video | Protected app-private file, excluded from backup | Never sent by Ace Pro |
+| Session title, type, focus, and date | Local app JSON | Never sent |
+| Apple Vision measurements | Processed on device; current screen state only | Never sent |
+| User observations | Local app JSON | Never sent |
+| Apple Intelligence description | Generated on device on eligible systems | Not sent by Ace Pro |
 
-PhotosPicker can download an iCloud-backed original through Apple's photo system when a user chooses it. Ace Pro itself does not upload the video. Imported copies are separate from Photos. Keep originals: app deletion removes the library, and no recovery/sync service is implemented.
+Ace Pro has no account, analytics SDK, advertising SDK, tracking code, or production backend connection. The system Photos picker may download an iCloud-backed original after the user selects it; that is an Apple service interaction rather than an Ace Pro upload.
 
-## Review position
+## User-facing limitations
 
-This is a local experience implementation, **not a claim of App Store readiness or guaranteed approval**. A random video analysis demo cannot be marketed as an AI coach that actually measures performance. Keep simulation disclosures visible in product, screenshots, description and review notes. Position any public release as a useful private video journal and coaching-practice tool; reviewers assess completeness and minimum functionality independently.
+The release UI states that motion candidates are generic trajectories, pose measurements are not technique diagnoses, and Apple Intelligence availability varies by device. The UI avoids simulated percentages, fake timestamps, and claims unsupported by measured results.
 
-Apple requires accurate descriptions, a complete working app, a privacy policy, and an in-app deletion path when account creation is offered. Optional guest access avoids blocking local video features behind an unnecessary account. Current accounts are explicitly local, and guest access is not protected by the demonstration login.
+## Public documents
 
-Sources checked for this implementation:
+- Privacy policy: https://github.com/gkauhanka/ace-pro/blob/main/docs/privacy-policy.md
+- Support: https://github.com/gkauhanka/ace-pro/blob/main/docs/support.md
+- Support requests: https://github.com/gkauhanka/ace-pro/issues
+
+## Owner-controlled release work
+
+The repository can prepare and validate the application, but the owner must provide a paid Apple Developer Program team, accept current Apple agreements, create the App Store Connect record, complete tax/banking information when applicable, upload screenshots, answer age-rating and privacy questions, and submit the signed archive.
+
+Apple approval is never guaranteed. Review guidance should be checked again immediately before submission:
+
 - https://developer.apple.com/app-store/review/guidelines/
-- https://developer.apple.com/support/offering-account-deletion-in-your-app/
-- https://developer.apple.com/documentation/technotes/tn3183-adding-required-reason-api-entries-to-your-privacy-manifest
-- https://vercel.com/docs/functions/runtimes/node-js
-
-## Before submission, in the publishing phase
-
-1. Install current Xcode and required iOS SDK, build on Simulator, and test real iPhones, large videos, low storage, cancellation, backgrounding, offline API failures, accessibility and deletion.
-2. Set Apple Developer team/bundle ownership and production signing; archive and validate.
-3. Deploy the metadata API to Vercel; configure its HTTPS address as the release default and remove the developer URL field. Decide host retention/abuse settings and reconcile App Privacy disclosures with those settings.
-4. Decide whether to retain the optional device-profile demo or simplify to a guest-only private journal. Real cross-device authentication would require scope beyond the single insights endpoint.
-5. Publish final owner-specific privacy and support pages and link them inside the native app. The in-app privacy explanation is implemented; published legal/contact details are not yet supplied.
-6. Validate the privacy manifest and app icon in the actual archive; confirm required-reason API usage against the final binary and SDK.
-7. Prepare accurate screenshots, description, age rating and review instructions emphasizing random coaching examples and no video analysis. Never hide demo behavior from reviewers or users.
-
-No cloud deployment, signing, App Store Connect changes or submission was performed in this implementation phase.
-
-Tutorial references verified during implementation:
-- Split-step timing, Essential Tennis: https://www.youtube.com/watch?v=jtWMP75377k
-- Consistent second serve, Tom Avery Tennis: https://www.youtube.com/watch?v=aGwJlCrwZ90
-
-Other technique links open labeled YouTube search results rather than inventing a specific video URL. External videos are linked, never downloaded or embedded automatically.
+- https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy
+- https://developer.apple.com/news/upcoming-requirements/

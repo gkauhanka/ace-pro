@@ -18,18 +18,18 @@ Recorded with a demo account and generated court footage. This is the browser pr
 
 The first backend slice implements resumable direct-to-object-storage video transfer with FastAPI, PostgreSQL, local MinIO testing, and production-shaped AWS Terraform. See the [backend runbook](./backend/README.md) and [storage design](./docs/video-storage-design.md).
 
-## On-device iOS coaching experience
+## On-device iOS review experience
 
-The native SwiftUI app in [`ios`](./ios) includes device accounts, guest access, Photos/Files import, a persistent local video library, timestamp playback, practice plans and notes. Its Apple Vision debug flow performs real analysis directly on the iPhone:
+The native SwiftUI app in [`ios`](./ios) is the App Store release candidate. It has no account or server dependency. It includes Photos/Files import, a persistent protected local video library, timestamp playback, a private observation journal, in-app privacy controls, and real Apple Vision measurement directly on the iPhone:
 
 - parabolic motion-candidate tracking with detected time ranges;
 - 2D and 3D human body pose estimation;
 - hand-pose estimation;
 - optical-flow sampling for camera and scene motion;
 - exact-frame pose review and bounded playback for motion candidates; and
-- optional Apple Intelligence summaries generated from the measured results on supported devices.
+- optional Apple Intelligence summaries generated from measured results on supported devices.
 
-The built-in Apple algorithms provide measurements, not tennis semantics. Motion candidates are not verified tennis balls, and serve/forehand/backhand labels require separately trained and evaluated Core ML models. Video frames remain on the device during the debug analysis. See the [native iOS instructions](./ios/README.md) and [phased on-device analysis plan](./docs/video-analysis/14-on-device-analysis.md).
+The built-in Apple algorithms provide measurements, not tennis semantics. Motion candidates are not verified tennis balls, and serve/forehand/backhand labels require separately trained and evaluated Core ML models. Video frames remain on the device. See the [native iOS instructions](./ios/README.md), [App Store submission checklist](./docs/app-store-submission.md), and [phased on-device analysis plan](./docs/video-analysis/14-on-device-analysis.md).
 
 Run the working local experience and its single API:
 
@@ -37,7 +37,7 @@ Run the working local experience and its single API:
 node insights-api/server.mjs
 ```
 
-Open http://localhost:8787. The browser preview is available without Xcode and can create a local court demo video. See the [API/preview runbook](./insights-api/README.md), [native iOS instructions](./ios/README.md), and [release boundary](./docs/app-store-experience.md). This experience does **not** use the older upload backend or ML pipeline below.
+Open http://localhost:8787. This is a separate browser prototype with clearly labeled simulated reports; it is not linked into the native App Store build. See the [API/preview runbook](./insights-api/README.md), [native iOS instructions](./ios/README.md), and [release boundary](./docs/app-store-experience.md).
 
 ## Video analysis architecture
 

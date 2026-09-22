@@ -14,7 +14,8 @@ targets:
       - AcePro
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.acepro.mobile
+        PRODUCT_BUNDLE_IDENTIFIER: com.glebkauhanka.acepro
+        DEVELOPMENT_TEAM: K86V38BHJ3
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_FILE: AcePro/Info.plist
         INFOPLIST_KEY_CFBundleDisplayName: Ace Pro
@@ -22,7 +23,7 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         TARGETED_DEVICE_FAMILY: 1
-        MARKETING_VERSION: 0.2.0
+        MARKETING_VERSION: 1.0.0
         CURRENT_PROJECT_VERSION: 1
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
 schemes:
