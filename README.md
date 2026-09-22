@@ -31,6 +31,14 @@ The native SwiftUI app in [`ios`](./ios) is the App Store release candidate. It 
 
 The built-in Apple algorithms provide measurements, not tennis semantics. Motion candidates are not verified tennis balls, and serve/forehand/backhand labels require separately trained and evaluated Core ML models. Video frames remain on the device. See the [native iOS instructions](./ios/README.md), [App Store submission checklist](./docs/app-store-submission.md), and [phased on-device analysis plan](./docs/video-analysis/14-on-device-analysis.md).
 
+### App Store preview
+
+These iPhone screenshots show the native release-candidate experience with representative data stored locally on the simulator. They are also kept as the source assets for the App Store listing.
+
+| Today | Library | Journal | Settings |
+| --- | --- | --- | --- |
+| ![Ace Pro Today screen](./docs/app-store/screenshots/01-today.png) | ![Ace Pro local video library](./docs/app-store/screenshots/02-library.png) | ![Ace Pro private observation journal](./docs/app-store/screenshots/03-journal.png) | ![Ace Pro privacy settings](./docs/app-store/screenshots/04-settings.png) |
+
 Run the working local experience and its single API:
 
 ```sh

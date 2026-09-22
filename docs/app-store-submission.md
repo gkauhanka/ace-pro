@@ -34,6 +34,14 @@ Features:
 
 **Support URL:** https://github.com/gkauhanka/ace-pro/blob/main/docs/support.md
 
+**Support email:** acepro.support.hleb@gmail.com
+
+**Price:** Free
+
+**Availability:** United States only
+
+**EU Digital Services Act status:** Non-trader
+
 ## App Review notes
 
 Ace Pro requires no account. On first launch, tap **Add a tennis video**, select any local video from Photos or Files, save it, open the session, and choose **On-device video analysis**. Select 15 seconds for the fastest review path.
@@ -59,6 +67,8 @@ Answer the current App Store Connect questionnaire based on the shipped binary. 
 `ITSAppUsesNonExemptEncryption` is set to `false`. Reconfirm this answer if future versions add custom cryptography, VPN functionality, or non-system encryption beyond Apple's operating-system services.
 
 ## Screenshots to capture
+
+Current 6.9-inch App Store assets are in [`docs/app-store/screenshots`](./app-store/screenshots). They were captured from the native app at 1320 × 2868 with representative local simulator data.
 
 1. Today screen with the private on-device positioning.
 2. Local video library.

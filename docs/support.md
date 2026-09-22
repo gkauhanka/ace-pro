@@ -28,4 +28,6 @@ Stable landscape footage with the full court visible generally produces the clea
 
 ## Contact
 
-Open a request in the public [Ace Pro issue tracker](https://github.com/gkauhanka/ace-pro/issues). Do not attach private video or include personal information in a public issue.
+Email [acepro.support.hleb@gmail.com](mailto:acepro.support.hleb@gmail.com) for private support, general feedback, or feature requests.
+
+You can also open a request in the public [Ace Pro issue tracker](https://github.com/gkauhanka/ace-pro/issues). Do not attach private video or include personal information in a public issue.

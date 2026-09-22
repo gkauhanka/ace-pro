@@ -2,9 +2,17 @@ import SwiftUI
 import AVKit
 import PhotosUI
 
+private func initialRootTab() -> Int {
+#if DEBUG
+    Int(ProcessInfo.processInfo.environment["ACEPRO_SCREENSHOT_TAB"] ?? "") ?? 0
+#else
+    0
+#endif
+}
+
 struct RootView: View {
     @EnvironmentObject private var store: PlayerStore
-    @State private var tab = 0
+    @State private var tab = initialRootTab()
     @State private var importing = false
 
     var body: some View {

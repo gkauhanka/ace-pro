@@ -43,4 +43,6 @@ If a future version introduces network services or new data practices, this poli
 
 ## Contact
 
-Support is available through the public [Ace Pro issue tracker](https://github.com/gkauhanka/ace-pro/issues). Do not post personal information or private video in a public issue.
+For private support or privacy questions, email [acepro.support.hleb@gmail.com](mailto:acepro.support.hleb@gmail.com).
+
+Support is also available through the public [Ace Pro issue tracker](https://github.com/gkauhanka/ace-pro/issues). Do not post personal information or private video in a public issue.
